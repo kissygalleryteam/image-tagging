@@ -2,12 +2,36 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>demo标题</title>
+    <title>KISSY Image Tagging Demo</title>
     <script src="http://a.tbcdn.cn/s/kissy/1.3.0/kissy-min.js" charset="utf-8"></script>
+    <link href="./index.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
-<h2>demo标题</h2>
+<h2>Image-Tagging</h2>
+<h3 class="s-title">Demo1 - 数据预先加载并渲染图片</h3>
+<div class="s-section">
+    <img id="huabao" width="400" src="http://img01.taobaocdn.com/poster_pic/i1/T1EGiHXiVbXXaH.X6X.JPEG_620x10000.jpg" alt="">
+</div>
+<h3 class="s-title">Demo2 - 一个图上面会有多种标记，怎么办？你可以利用tagContent和tagClass配置单个标记，或者对一张图生成多个ImageTag</h3>
+<div class="s-section">
+    <img id="example2" width="400" src="http://img01.taobaocdn.com/poster_pic/i1/T1bz5FXchrXXaH.X6X.JPEG_620x10000.jpg" alt="包包">
+    <img id="example3" width="400" src="http://img01.taobaocdn.com/poster_pic/i1/T1bz5FXchrXXaH.X6X.JPEG_620x10000.jpg" alt="包包">
+</div>
+<h3 class="s-title">Demo3 - 标记数据异步载入(第二张图片的打点在3秒后加载)</h3>
+<div class="s-section" id="asynHuabao">
+        <img src="http://img01.taobaocdn.com/poster_pic/i1/T1mimFXdluXXaH.X6X.JPEG_620x10000.jpg">
+        <img src="http://img03.taobaocdn.com/poster_pic/i3/T1kmyFXlBgXXaH.X6X.JPEG_620x10000.jpg">
+</div>
 
+<h3 class="s-title">Demo4 - 图片广告效果</h3>
+<div class="s-section">
+    <img id="advertiser" width="600" src="http://img02.taobaocdn.com/tps/i2/T1FRrFXe0lXXa_wlg4-1095-730.jpg">
+</div>
+
+<h3 class="s-title">Demo5 - tag + tip效果</h3>
+<div class="s-section">
+    <img id="J_tagandtip" src="http://img03.taobaocdn.com/tps/i3/T1uveJXchfXXXXXXXX-620-404.jpg" />
+</div>
 <script>
     var S = KISSY;
     if (S.Config.debug) {
@@ -24,9 +48,188 @@
         });
     }
 
-    S.use('gallery/image-tagging/1.0/index', function (S, Image-tagging) {
-         var image-tagging = new Image-tagging();
-    })
+    // script for demo1
+    KISSY.use('gallery/image-tagging/1.0/', function(S, ImageTag) {
+        var customClassName = 'greenTag';
+        new ImageTag('#huabao', [
+            {top:60,left:250},
+            {top:320,left:250}
+        ], {
+            tagContent:'+'
+        });
+    });
+
+    // script for demo2
+    KISSY.use('gallery/image-tagging/1.0/', function(S, ImageTag) {
+        new ImageTag('#example2', [
+            {top:50,left:300},
+            {top:200,left:150}
+        ], {
+            tagContent:function(el) {
+                if (el.index == 1) {
+                    return '红点';
+                } else {
+                    return '黑点';
+                }
+            },
+            tagClass: function(el) {
+                if (el.index == 1) {
+                    return 'redTag';
+                } else {
+                    return 'blackTag';
+                }
+            }
+        });
+
+        var anotherConfig = {
+            tagClass: 'greenTag',
+            tagContent: '绿'
+        };
+        new ImageTag('#example3',[
+            {top:250,left:200}
+        ], anotherConfig);
+        var andOneMoreConfig = {
+            tagClass: 'redTag',
+            tagContent: '红'
+        };
+        new ImageTag('#example3', [
+            {top:200,left:150}
+        ], andOneMoreConfig);
+    });
+
+    // script for demo3
+    KISSY.use('gallery/image-tagging/1.0/',function(S, ImageTag) {
+        var D = S.DOM,
+                imgs = D.query('img', '#asynHuabao'),
+                i = 1;
+        S.each(imgs, function(imgEl, index) {
+            var reqObject = {
+                idx: i++,
+                picSrc : imgEl.src,
+                width: D.width(imgEl),
+                height: D.height(imgEl),
+                userId: 1
+            };
+            if (index == 1) {
+                S.later(function(){
+                    S.jsonp('http://www.taobao.com/go/act/kissy-gallery-image-tagging/render.php', reqObject, function(el) {
+                        new ImageTag(imgEl, el.coords,{
+                            tagClass: 'redTag',
+                            tagContent: '+'
+                        });
+                    });
+                }, 3000);
+            } else {
+                S.jsonp('http://www.taobao.com/go/act/kissy-gallery-image-tagging/render.php', reqObject, function(el) {
+                    new ImageTag(imgEl, el.coords, {
+                        tagContent: '+'
+                    });
+                });
+            }
+        });
+    });
+
+    // script for demo4
+    KISSY.use('gallery/image-tagging/1.0/', function(S, ImageTag) {
+        var D = S.DOM,E = S.Event,
+                img = D.get('#advertiser');
+        var aNormalTag = new ImageTag(img, [
+            {top:200,left:250},
+            {top:250,left:300}
+        ],{
+            tagContent:function(el) {
+                var index = el.index;
+                if (index == 0) {
+                    return "+";
+                } else if (index == 1) {
+                    return '-';
+                }
+            },
+            tagClass:function(el) {
+                var idx = el.index;
+                if (idx == 0) {
+                    return 'tag-plus';
+                } else {
+                    return 'tag-minus';
+                }
+            }
+        });
+
+        var anAdvertise = new ImageTag(img, [
+            {bottom:0,left:0}
+        ], {
+            tagContent:'<div class="tag-box">' +
+                    '<s></s><b title="关闭广告" class="tag-close">x</b>' +
+                    '<a href="http://www.apple.com.cn/ipad/" target="_blank"><img src="http://placehold.it/580x70/ff6600/fff&text=it\'s time to get an ipad!"></a></div>',
+            tagClass:'ad-tag'
+        });
+        E.on(D.get('body'),'click',function(el) {
+            if (D.hasClass(el.target, 'tag-close')) {
+                anAdvertise.hideAll();
+            }
+        });
+    });
+
+    // script for demo5
+    KISSY.use('gallery/image-tagging/1.0/, overlay',function(S, ImageTag, Overlay) {
+        var D = S.DOM, E = S.Event;
+        var FaceTag = new ImageTag('#J_tagandtip',[
+            {top:60,left:40},
+            {top:30,left:200},
+            {top:40,left:400}
+        ],{
+            tagClass:'tag-face',
+            tagContent:function(el) {
+                if (el.index == 0) {
+                    return '<a class="face-tag-popup" href="#" title="大家没觉得我很帅？"></a><span class="face-tip">大家没觉得我很帅？</span>';
+                } else if (el.index == 1) {
+                    return '<a class="face-tag-popup" href="#" title="......"></a><span class="face-tip">......</span>';
+                } else {
+                    return '<a class="face-tag-popup" href="#" title="翔哥，等我！！"></a><span class="face-tip">翔哥，等我！！</span>';
+                }
+            }
+        });
+
+        E.on('#J_tagandtip', 'mouseover', function(ev) {
+            if (ev.target.id == 'J_tagandtip') {
+                FaceTag.showAll();
+                D.css('.face-tag-popup', 'opacity', 1);
+            }
+        });
+
+        E.on('#J_tagandtip', 'mouseout', function(ev) {
+            if (ev.target.id == 'J_tagandtip' && D.contains(ev.relatedTarget, '#J_tagandtip')) {
+                FaceTag.hideAll();
+                D.css('.face-tag-popup', 'opacity', 0);
+            }
+        });
+
+        E.on(FaceTag.wrapNode, 'mouseover', function(ev) {
+            if (D.hasClass(ev.target, 'tag-face') || D.parent(ev.target, '.tag-face')) {
+                var target = D.hasClass(ev.target, 'tag-face') || D.parent(ev.target, '.tag-face');
+                var index = D.attr(target, 'tagindex');
+                S.each(FaceTag.getTagNodes(), function(el, i) {
+                    if (i != index) {
+                        el.hide();
+                    } else {
+                        D.css(D.get('.face-tip',el.getContentElement()),'visibility','visible');
+                    }
+                });
+            }
+        });
+
+        E.on(FaceTag.wrapNode, 'mouseout', function(ev) {
+            if (D.hasClass(ev.target, 'tag-face') || D.parent(ev.target, '.tag-face')) {
+                var target = D.hasClass(ev.target, 'tag-face') || D.parent(ev.target, '.tag-face');
+                var index = D.attr(target, 'tagindex');
+                S.each(FaceTag.getTagNodes(), function(el, i) {
+                    if (i == index) {
+                        D.css(D.get('.face-tip',el.getContentElement()),'visibility','hidden');
+                    }
+                });
+            }
+        });
+    });
 </script>
 </body>
 </html>
