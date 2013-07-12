@@ -1,12 +1,12 @@
 {
     "name": "image-tagging",
     "version": "1.0",
-    "desc": "请修改组件描述",
+    "desc": "图片打标记组件",
     "cover": "",
     "author": {
         "name": "乔福",
         "email": "qiaofu@taobao.com",
-        "page": "请修改作者个人首页"
+        "page": "http://zipeng.info"
     },
     "type": "kissy-pie",
     "type-url": "http://abc.alibaba-inc.com/r/kissy-pie"
