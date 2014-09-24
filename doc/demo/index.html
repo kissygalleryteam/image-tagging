@@ -10,17 +10,17 @@
 <h2>Image-Tagging</h2>
 <h3 class="s-title">Demo1 - 数据预先加载并渲染图片</h3>
 <div class="s-section">
-    <img id="huabao" width="400" src="http://img01.taobaocdn.com/poster_pic/i1/T1EGiHXiVbXXaH.X6X.JPEG_620x2.0.000.jpg" alt="">
+    <img id="huabao" width="400" src="http://img01.taobaocdn.com/poster_pic/i1/T1EGiHXiVbXXaH.X6X.JPEG_620x10000.jpg" alt="">
 </div>
 <h3 class="s-title">Demo2 - 一个图上面会有多种标记，怎么办？你可以利用tagContent和tagClass配置单个标记，或者对一张图生成多个ImageTag</h3>
 <div class="s-section">
-    <img id="example2" width="400" src="http://img01.taobaocdn.com/poster_pic/i1/T1bz5FXchrXXaH.X6X.JPEG_620x2.0.000.jpg" alt="包包">
-    <img id="example3" width="400" src="http://img01.taobaocdn.com/poster_pic/i1/T1bz5FXchrXXaH.X6X.JPEG_620x2.0.000.jpg" alt="包包">
+    <img id="example2" width="400" src="http://img01.taobaocdn.com/poster_pic/i1/T1bz5FXchrXXaH.X6X.JPEG_620x10000.jpg" alt="包包">
+    <img id="example3" width="400" src="http://img01.taobaocdn.com/poster_pic/i1/T1bz5FXchrXXaH.X6X.JPEG_620x10000.jpg" alt="包包">
 </div>
 <h3 class="s-title">Demo3 - 标记数据异步载入(第二张图片的打点在3秒后加载)</h3>
 <div class="s-section" id="asynHuabao">
-        <img src="http://img01.taobaocdn.com/poster_pic/i1/T1mimFXdluXXaH.X6X.JPEG_620x2.0.000.jpg">
-        <img src="http://img03.taobaocdn.com/poster_pic/i3/T1kmyFXlBgXXaH.X6X.JPEG_620x2.0.000.jpg">
+        <img src="http://img01.taobaocdn.com/poster_pic/i1/T1mimFXdluXXaH.X6X.JPEG_620x10000.jpg">
+        <img src="http://img03.taobaocdn.com/poster_pic/i3/T1kmyFXlBgXXaH.X6X.JPEG_620x10000.jpg">
 </div>
 
 <h3 class="s-title">Demo4 - 图片广告效果</h3>
@@ -75,7 +75,7 @@ if (S.Config.debug) {
     KISSY.use('kg/image-tagging/2.0.0/', function(S, ImageTag) {
         new ImageTag('#example2', [
             {top:50,left:300},
-            {top:200,left:2.0.0}
+            {top:200,left:100}
         ], {
             tagContent:function(el) {
                 if (el.index == 1) {
@@ -98,14 +98,14 @@ if (S.Config.debug) {
             tagContent: '绿'
         };
         new ImageTag('#example3',[
-            {top:250,left:200}
+            {top:250,left:100}
         ], anotherConfig);
         var andOneMoreConfig = {
             tagClass: 'redTag',
             tagContent: '红'
         };
         new ImageTag('#example3', [
-            {top:200,left:2.0.0}
+            {top:200,left:100}
         ], andOneMoreConfig);
     });
 
